@@ -84,15 +84,25 @@ export default function AppFunctional(props) {
 
   function onChange(evt) {
     // You will need this to update the value of the input.
+    setEmail(evt.target.value);
   }
 
   function onSubmit(evt) {
     // Use a POST request to send a payload to the server.
-    url = 'http://localhost:9000/api/result'
+    evt.preventDefault();
+    console.log(evt);
+    let url = 'http://localhost:9000/api/result'
     let [x,y] = getXY();
 
+    let args = {x:x, y:y, steps:steps, email:email};
+    console.log(args);
+
+    let messageElement = document.getElementById('message');
+
     axios
-      .post(url, {x:x, y:y, steps:steps, email:email});
+      .post(url, {x:x, y:y, steps:steps, email:email})
+      .then((res) => {messageElement.textContent = res.data.message})
+      .catch((err) => {messageElement.textContent = err.response.data.message;});
   }
 
   return (
@@ -121,8 +131,8 @@ export default function AppFunctional(props) {
         <button id="reset" onClick={reset}>reset</button>
       </div>
       <form>
-        <input id="email" type="email" placeholder="type email"></input>
-        <input id="submit" type="submit"></input>
+        <input id="email" type="email" placeholder="type email" onChange={onChange}></input>
+        <input id="submit" type="submit" onClick={onSubmit}></input>
       </form>
     </div>
   )
