@@ -36,6 +36,8 @@ export default function AppFunctional(props) {
     // Use this helper to reset all states to their initial values.
     setIndex(initialIndex);
     setSteps(initialSteps);
+    setEmail(initialEmail);
+    document.getElementById('message').textContent='';
   }
 
   function getNextIndex(direction) {
@@ -103,13 +105,15 @@ export default function AppFunctional(props) {
       .post(url, {x:x, y:y, steps:steps, email:email})
       .then((res) => {messageElement.textContent = res.data.message})
       .catch((err) => {messageElement.textContent = err.response.data.message;});
+
+      setEmail(initialEmail);
   }
 
   return (
     <div id="wrapper" className={props.className}>
       <div className="info">
         <h3 id="coordinates">{getXYMessage()}</h3>
-        <h3 id="steps">You moved {steps} times</h3>
+        <h3 id="steps">You moved {steps} time{steps==1?'s':''}</h3>
       </div>
       <div id="grid">
         {
