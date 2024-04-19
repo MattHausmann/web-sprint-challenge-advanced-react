@@ -30,14 +30,13 @@ export default function AppFunctional(props) {
     return `Coordinates (${x}, ${y})`;
   }
 
-  console.log(getXYMessage());
-
   function reset() {
     // Use this helper to reset all states to their initial values.
     setIndex(initialIndex);
     setSteps(initialSteps);
     setEmail(initialEmail);
     document.getElementById('message').textContent='';
+    document.getElementById('email').value='';
   }
 
   function getNextIndex(direction) {
@@ -92,12 +91,10 @@ export default function AppFunctional(props) {
   function onSubmit(evt) {
     // Use a POST request to send a payload to the server.
     evt.preventDefault();
-    console.log(evt);
     let url = 'http://localhost:9000/api/result'
     let [x,y] = getXY();
 
     let args = {x:x, y:y, steps:steps, email:email};
-    console.log(args);
 
     let messageElement = document.getElementById('message');
 
@@ -105,15 +102,16 @@ export default function AppFunctional(props) {
       .post(url, {x:x, y:y, steps:steps, email:email})
       .then((res) => {messageElement.textContent = res.data.message})
       .catch((err) => {messageElement.textContent = err.response.data.message;});
-
-      setEmail(initialEmail);
+      
+      setEmail('');
+      document.getElementById('email').value='';
   }
 
   return (
     <div id="wrapper" className={props.className}>
       <div className="info">
         <h3 id="coordinates">{getXYMessage()}</h3>
-        <h3 id="steps">You moved {steps} time{steps==1?'s':''}</h3>
+        <h3 id="steps">You moved {steps} time{steps==1?'':'s'}</h3>
       </div>
       <div id="grid">
         {
