@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react'
-
+import axios from 'axios';
 // Suggested initial states
 const initialMessage = ''
 const initialEmail = ''
@@ -13,6 +13,8 @@ export default function AppFunctional(props) {
 
   const [index, setIndex] = useState(initialIndex);
   const [steps, setSteps] = useState(initialSteps);
+  const [email, setEmail] = useState(initialEmail);
+
  
   function getXY() {
     // It it not necessary to have a state to track the coordinates.
@@ -40,7 +42,12 @@ export default function AppFunctional(props) {
     // This helper takes a direction ("left", "up", etc) and calculates what the next index
     // of the "B" would be. If the move is impossible because we are at the edge of the grid,
     // this helper should return the current index unchanged.
+
+    let messageElement = document.getElementById('message');
+    messageElement.textContent = '';
+
     let [x,y] = getXY();
+
     if(direction=="LEFT") {
       if(x > 1) {
         return index-1;
@@ -61,6 +68,7 @@ export default function AppFunctional(props) {
         return index+3;
       }
     }
+    messageElement.textContent = `You can't go ${direction.toLowerCase()}`
     return index;
   }
 
@@ -80,6 +88,11 @@ export default function AppFunctional(props) {
 
   function onSubmit(evt) {
     // Use a POST request to send a payload to the server.
+    url = 'http://localhost:9000/api/result'
+    let [x,y] = getXY();
+
+    axios
+      .post(url, {x:x, y:y, steps:steps, email:email});
   }
 
   return (
